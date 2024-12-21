@@ -1,6 +1,7 @@
 import pygame
 import sys
 import time
+import copy
 import logging
 from sudoku import solve_sudoku, generate_random_puzzle
 from sudoku_utils import is_valid_sudoku, get_filled_cells_range
@@ -146,6 +147,7 @@ def mode1():
                         error_message = None 
                     else:
                         error_message = "The puzzle is unsolvable."
+                        logging.info("The puzzle is unsolvable.")
 
                 # Check if regenerate button is clicked
                 elif 850 <= event.pos[0] <= 1090 and 575 <= event.pos[1] <= 625:
@@ -231,6 +233,7 @@ def mode2():
                             error_message = None
                         else:
                             error_message = "The puzzle is unsolvable."
+                            logging.info("The puzzle is unsolvable.")
 
                     else:
                         error_message = "Invalid Sudoku Input. Please Check Game Constraints"
@@ -334,10 +337,10 @@ def mode2():
 def mode3():
     mode3_agent = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Mode 3: User Solve User Generate Board")
-    puzzle = [[0 for _ in range(9)] for _ in range(9)]
+    puzzle = generate_random_puzzle(difficulty_texts[selected_difficulty])
     selected_cell = None
     solved_puzzle = None
-    user_input_grid = [[0 for _ in range(9)] for _ in range(9)]
+    user_input_grid = copy.deepcopy(puzzle)
     mode3 = True
     error_message = None
     invalid_key_message = None
@@ -373,6 +376,7 @@ def mode3():
                             error_message = None
                         else:
                             error_message = "The puzzle is unsolvable."
+                            logging.info("The puzzle is unsolvable.")
                     else:
                         error_message = "Invalid Sudoku Input. Please Check Game Constraints"
                 elif 850 <= event.pos[0] <= 1050 and 575 <= event.pos[1] <= 625:
@@ -411,6 +415,11 @@ def mode3():
         hint_font = pygame.font.SysFont(None, 30)
         hint_text = hint_font.render(f"Enter between {min_cells} and {max_cells} cells", True, BLACK)
         mode3_agent.blit(hint_text, (850, 100))
+        
+        Instructions_font = pygame.font.SysFont(None, 30)
+        Instructions_text = Instructions_font.render("Click on (Start Solve Board) to start playing ..", True, BLACK)
+        mode3_agent.blit(Instructions_text, (800, 150))
+        
 
         if selected_cell is not None:
             cell_x, cell_y = selected_cell
@@ -454,6 +463,9 @@ def mode3():
                     if user_input_grid[y][x] != 0 and user_input_grid[y][x] != solved_puzzle[y][x]:
                         # incorrect user input
                         pygame.draw.rect(mode3_agent, ERROR, (x * 80 + 12, y * 80 + 12, 72, 72), 5, border_radius=10)
+                        print(f"User input at ({x}, {y}) is incorrect")
+                        logging.info(f"User input at ({x}, {y}) is incorrect")
+                        invalid_key_message = (f"Input at Column ({x+1}), Row ({y+1}) is incorrect")
 
 
         pygame.draw.rect(mode3_agent, BUTTON_BACKGROUND, (850, 500, 200, 50), border_radius=20)
