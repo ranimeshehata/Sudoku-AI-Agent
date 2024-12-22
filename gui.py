@@ -13,11 +13,11 @@ logging.info("=====================================\n")
 pygame.init()
 
 WIDTH, HEIGHT = 1300, 800
-BUTTON_WIDTH, BUTTON_HEIGHT = 480, 130
+BUTTON_WIDTH, BUTTON_HEIGHT = 530, 130
 BUTTON_GAP = 100
 
 WHITE = (255, 255, 255) 
-MENU_BUTTON_BACKGROUND = (233, 228, 216)
+MENU_BUTTON_BACKGROUND = (173, 216, 230)
 BLACK = (0, 0, 0)
 GREY = (128, 128, 128)
 ERROR = (230, 30, 30)
@@ -46,9 +46,9 @@ buttons = [
     pygame.Rect((WIDTH - BUTTON_WIDTH) // 2, 500, BUTTON_WIDTH, BUTTON_HEIGHT)
 ]
 button_texts = [
-    "Mode 1: AI Agent Solve Randomized Board",
-    "Mode 2: AI Agent Solve User Generate Board",
-    "Mode 3: User Solve User Generate Board"
+    "Mode 1: AI Agent Solves Randomly Generated Board",
+    "Mode 2: AI Agent Solves User Generated Board",
+    "Mode 3: User Solves Randomly Generated Board"
 ]
 
 difficulty_buttons = [
