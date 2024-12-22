@@ -336,6 +336,66 @@ def mode2():
 
     return puzzle
 
+def highlight_conflicts(mode3_agent, user_input_grid, solved_puzzle):
+    conflict_messages = []
+    for y in range(9):
+        for x in range(9):
+            if user_input_grid[y][x] != 0 and user_input_grid[y][x] != solved_puzzle[y][x]:
+                # Highlight the incorrect cell
+                pygame.draw.rect(mode3_agent, ERROR, (x * 80 + 12, y * 80 + 12, 72, 72), 5, border_radius=10)
+                conflict_message = f"Input at Column ({x+1}), Row ({y+1}) is incorrect"
+                conflict_messages.append(conflict_message)
+                logging.info(conflict_message)
+                print(conflict_message)
+
+                # Highlight the conflicting row
+                for col in range(9):
+                    if user_input_grid[y][col] == user_input_grid[y][x] and col != x:
+                        pygame.draw.rect(mode3_agent, ERROR, (col * 80 + 12, y * 80 + 12, 72, 72), 5, border_radius=10)
+                        conflict_message = f"Conflict with cell at Column ({col+1}), Row ({y+1})"
+                        conflict_messages.append(conflict_message)
+                        logging.info(conflict_message)
+                        print(conflict_message)
+
+                # Highlight the conflicting column
+                for row in range(9):
+                    if user_input_grid[row][x] == user_input_grid[y][x] and row != y:
+                        pygame.draw.rect(mode3_agent, ERROR, (x * 80 + 12, row * 80 + 12, 72, 72), 5, border_radius=10)
+                        conflict_message = f"Conflict with cell at Column ({x+1}), Row ({row+1})"
+                        conflict_messages.append(conflict_message)
+                        logging.info(conflict_message)
+                        print(conflict_message)
+
+                # Highlight the conflicting subgrid
+                subgrid_row, subgrid_col = 3 * (y // 3), 3 * (x // 3)
+                for row in range(subgrid_row, subgrid_row + 3):
+                    for col in range(subgrid_col, subgrid_col + 3):
+                        if user_input_grid[row][col] == user_input_grid[y][x] and (row, col) != (y, x):
+                            pygame.draw.rect(mode3_agent, ERROR, (col * 80 + 12, row * 80 + 12, 72, 72), 5, border_radius=10)
+                            conflict_message = f"Conflict with cell at Column ({col+1}), Row ({row+1})"
+                            conflict_messages.append(conflict_message)
+                            logging.info(conflict_message)
+                            print(conflict_message)
+
+    # Display conflict messages on the window
+    if conflict_messages:
+        font = pygame.font.SysFont(None, 30)
+        y_offset = 250
+        for message in conflict_messages:
+            text_surface = font.render(message, True, ERROR)
+            text_rect = text_surface.get_rect(center=(WIDTH // 2 + 340, y_offset))
+            box_padding = 20
+            box_rect = pygame.Rect(
+                text_rect.left - box_padding,
+                text_rect.top - box_padding,
+                text_rect.width + 2 * box_padding,
+                text_rect.height + 2 * box_padding
+            )
+            pygame.draw.rect(mode3_agent, BUTTON_BACKGROUND, box_rect)
+            pygame.draw.rect(mode3_agent, ERROR, box_rect, 2)
+            mode3_agent.blit(text_surface, text_rect)
+            y_offset += text_rect.height + 40
+
 def mode3():
     mode3_agent = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Mode 3: User Solve User Generate Board")
@@ -460,14 +520,16 @@ def mode3():
             mode3_agent.blit(error_text, error_rect)
         # Compare user input with solver's solution in real-time
         if solved_puzzle is not None:
-            for y in range(9):
-                for x in range(9):
-                    if user_input_grid[y][x] != 0 and user_input_grid[y][x] != solved_puzzle[y][x]:
-                        # incorrect user input
-                        pygame.draw.rect(mode3_agent, ERROR, (x * 80 + 12, y * 80 + 12, 72, 72), 5, border_radius=10)
-                        print(f"User input at ({x}, {y}) is incorrect")
-                        logging.info(f"User input at ({x}, {y}) is incorrect")
-                        invalid_key_message = (f"Input at Column ({x+1}), Row ({y+1}) is incorrect")
+            highlight_conflicts(mode3_agent, user_input_grid, solved_puzzle)
+
+            # for y in range(9):
+            #     for x in range(9):
+            #         if user_input_grid[y][x] != 0 and user_input_grid[y][x] != solved_puzzle[y][x]:
+            #             # incorrect user input
+            #             pygame.draw.rect(mode3_agent, ERROR, (x * 80 + 12, y * 80 + 12, 72, 72), 5, border_radius=10)
+            #             print(f"User input at ({x}, {y}) is incorrect")
+            #             logging.info(f"User input at ({x}, {y}) is incorrect")
+            #             invalid_key_message = (f"Input at Column ({x+1}), Row ({y+1}) is incorrect")
 
 
         pygame.draw.rect(mode3_agent, BUTTON_BACKGROUND, (850, 500, 200, 50), border_radius=20)
