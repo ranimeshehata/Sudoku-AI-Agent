@@ -110,6 +110,7 @@ def apply_arc_consistency(board):
     while queue:
         xi, xj = queue.pop(0)
         print(f"Processing cell ({xi}, {xj})")
+        logging.info("=====================================================")
         logging.info(f"Processing cell ({xi}, {xj})")
         for i in range(9):
             if i != xi and revise((i, xj), (xi, xj)):

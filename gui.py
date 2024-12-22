@@ -40,11 +40,13 @@ background_image = pygame.image.load("photo.webp")
 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
 font = pygame.font.SysFont(None, 40)
 button_font = pygame.font.SysFont(None, 30)
+
 buttons = [
     pygame.Rect((WIDTH - BUTTON_WIDTH) // 2, 100, BUTTON_WIDTH, BUTTON_HEIGHT),
     pygame.Rect((WIDTH - BUTTON_WIDTH) // 2, 300, BUTTON_WIDTH, BUTTON_HEIGHT),
     pygame.Rect((WIDTH - BUTTON_WIDTH) // 2, 500, BUTTON_WIDTH, BUTTON_HEIGHT)
 ]
+
 button_texts = [
     "Mode 1: AI Agent Solves Randomly Generated Board",
     "Mode 2: AI Agent Solves User Generated Board",
@@ -379,11 +381,11 @@ def mode3():
                             logging.info("The puzzle is unsolvable.")
                     else:
                         error_message = "Invalid Sudoku Input. Please Check Game Constraints"
-                elif 850 <= event.pos[0] <= 1050 and 575 <= event.pos[1] <= 625:
-                    # Reset the puzzle when "Reset Board" button is clicked
-                    puzzle = [[0 for _ in range(9)] for _ in range(9)]
-                    user_input_grid = [[0 for _ in range(9)] for _ in range(9)]
-                    error_message = None
+                # Check if regenerate button is clicked
+                elif 850 <= event.pos[0] <= 1090 and 575 <= event.pos[1] <= 625:
+                    puzzle = generate_random_puzzle(difficulty_texts[selected_difficulty])
+                    user_input_grid = generate_random_puzzle(difficulty_texts[selected_difficulty])
+                    error_message = None 
                 else:
                     # Get the clicked cell position
                     cell_x = (event.pos[0] - 10) // 80  
@@ -474,8 +476,8 @@ def mode3():
         button_font = pygame.font.SysFont(None, 30)
         solve_text = button_font.render("Start Solve Board", True, BUTTON_TEXT)
         mode3_agent.blit(solve_text, (860, 510))
-        reset_text = button_font.render("Reset Board", True, BUTTON_TEXT)
-        mode3_agent.blit(reset_text, (880, 585))
+        reset_text = button_font.render("Randomize Board", True, BUTTON_TEXT)
+        mode3_agent.blit(reset_text, (866, 585))
         back_text = button_font.render("Back to Menu", True, BUTTON_TEXT)
         mode3_agent.blit(back_text, (880, 660))
 
