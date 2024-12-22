@@ -372,7 +372,7 @@ def highlight_conflicts(mode3_agent, user_input_grid, solved_puzzle):
                     for col in range(subgrid_col, subgrid_col + 3):
                         if user_input_grid[row][col] == user_input_grid[y][x] and (row, col) != (y, x):
                             pygame.draw.rect(mode3_agent, ERROR, (col * 80 + 12, row * 80 + 12, 72, 72), 5, border_radius=10)
-                            conflict_message = f"Conflict with cell at Column ({col+1}), Row ({row+1})"
+                            conflict_message = f"Conflict with cell ({col+1}), Row ({row+1}) in same subgrid"
                             conflict_messages.append(conflict_message)
                             logging.info(conflict_message)
                             print(conflict_message)
