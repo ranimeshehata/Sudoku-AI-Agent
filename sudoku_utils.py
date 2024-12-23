@@ -91,3 +91,8 @@ def get_filled_cells_range(difficulty):
     else:
         return 0, 81 
 
+def is_board_complete(grid):
+    for row in grid:
+        if 0 in row:
+            return False
+    return is_valid_sudoku(grid)

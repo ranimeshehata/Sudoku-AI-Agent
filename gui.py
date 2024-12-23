@@ -4,7 +4,7 @@ import time
 import copy
 import logging
 from sudoku import solve_sudoku, generate_random_puzzle
-from sudoku_utils import is_valid_sudoku, get_filled_cells_range
+from sudoku_utils import is_valid_sudoku, get_filled_cells_range, is_board_complete
 
 logging.basicConfig(filename='sudoku_agent.log', level=logging.INFO, format='%(message)s', filemode='w')
 logging.info("Sudoku Agent Log\n")
@@ -474,7 +474,16 @@ def mode3():
                         else:
                             print(f"Invalid key pressed")
                             invalid_key_message = "Invalid key pressed. Please press a number key (1-9) or Backspace/Delete to clear the cell."
-
+                            
+                if is_board_complete(user_input_grid):
+                    solved_puzzle = solve_sudoku(user_input_grid)
+                    if solved_puzzle is None:
+                        error_message = "The puzzle is unsolvable."
+                        logging.info("The puzzle is unsolvable.")
+                    else:
+                        error_message = "Congratulations! You have successfully solved the puzzle."
+                        logging.info("Congratulations! You have successfully solved the puzzle.")
+                        
         mode3_agent.fill(BACKGROUND)
         draw_sudoku_board(mode3_agent, user_input_grid)
 
