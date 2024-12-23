@@ -156,7 +156,6 @@ def forward_checking(board, row, col, num):
 def apply_arc_consistency(board, parent_domains=None):
     queue = []
     # Initialize domains with all possible values
-    # domains = [[list(range(1, 10)) for _ in range(9)] for _ in range(9)] 
     domains = copy.deepcopy(parent_domains) if parent_domains is not None else [[list(range(1, 10)) for _ in range(9)] for _ in range(9)]
     steps = []  # List to store the steps of arc consistency
 
@@ -227,27 +226,6 @@ def solve_sudoku(initial_board):
 
     return solved_board
 
-# def solve_sudoku(initial_board):
-#     board = copy.deepcopy(initial_board)
-
-#     # Apply arc consistency first
-#     initial_domains, steps = apply_arc_consistency(board)
-#     if initial_domains is None:
-#         print("Arc consistency failed. The puzzle might be unsolvable.")
-#         logging.info("Arc consistency failed. The puzzle might be unsolvable.")
-#         return None
-
-#     # Now perform backtracking with the updated domains
-#     domains = copy.deepcopy(initial_domains)
-#     if not backtracking(board, domains):
-#         print("The puzzle is unsolvable.")
-#         logging.info("The puzzle is unsolvable.")
-#         return None
-
-#     # Create a new board with resolved values, and we directly inject values with domain size 1, otherwise we keep it empty (0)
-#     solved_board = [[domains[i][j][0] if isinstance(domains[i][j], list) and len(domains[i][j]) == 1 else 0 for j in range(9)] for i in range(9)]
-
-#     return solved_board
 
 
 def generate_random_puzzle(difficulty):
