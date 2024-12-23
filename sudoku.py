@@ -14,7 +14,7 @@ def backtracking(board, domains=None):
     if mrv_cell is None:   # If no mrv cell is found, the board is solved.
         return True
 
-    print(f"MRV is {mrv_cell}")
+    # print(f"MRV is {mrv_cell}")
     row, col = mrv_cell
 
     domain_values = domains[row][col]
@@ -22,35 +22,35 @@ def backtracking(board, domains=None):
     # we re-order by least constrained value of domain of mrv
     domain_values.sort(key=lambda num: count_constrained_values(board, row, col, num))
 
-    print(f"Attempting to fill cell ({row}, {col}) with domain values: {domain_values}")
+    # print(f"Attempting to fill cell ({row}, {col}) with domain values: {domain_values}")
     logging.info(f"Attempting to fill cell ({row}, {col}) with domain values: {domain_values}")
 
     for num in domain_values:
-        print(f"Trying value {num} for cell ({row}, {col})")
+        # print(f"Trying value {num} for cell ({row}, {col})")
         logging.info(f"Trying value {num} for cell ({row}, {col})")
         if is_valid_move(board, row, col, num):
             board[row][col] = num
-            print("Applying Arc Consistency")
+            # print("Applying Arc Consistency")
             logging.info("Applying Arc Consistency")
 
             # first returned value is domains, it's None if a var domain became empty
             new_domains, steps = apply_arc_consistency(board, domains)
             if new_domains is not None:
-                print("Arc Consistency check is successful")
+                # print("Arc Consistency check is successful")
                 logging.info("Arc Consistency check is successful")
 
                 # Recursive call to fill the next cell --> DFS way
                 if backtracking(board, new_domains):
                     return True
 
-            print(f"Value {num} for cell ({row}, {col}) leads to conflict. Backtracking...")
+            # print(f"Value {num} for cell ({row}, {col}) leads to conflict. Backtracking...")
             logging.info(f"Value {num} for cell ({row}, {col}) leads to conflict. Backtracking...")
             board[row][col] = 0
         else:
-            print(f"Value {num} is not valid for cell ({row}, {col}). Skipping...")
+            # print(f"Value {num} is not valid for cell ({row}, {col}). Skipping...")
             logging.info(f"Value {num} is not valid for cell ({row}, {col}). Skipping...") 
 
-    print(f"No valid value found for cell ({row}, {col}). Backtracking...")
+    # print(f"No valid value found for cell ({row}, {col}). Backtracking...")
     logging.info(f"No valid value found for cell ({row}, {col}). Backtracking...")
     return False
 
@@ -93,13 +93,13 @@ def apply_arc_consistency(board, parent_domains=None):
                 revised = True
         if revised:
             steps.append(((xi[0], xi[1]), (xj[0], xj[1]), removed_values))
-            print(f"Revised: {removed_values} removed from ({xi[0]}, {xi[1]})'s domain due to ({xj[0]}, {xj[1]})")
+            # print(f"Revised: {removed_values} removed from ({xi[0]}, {xi[1]})'s domain due to ({xj[0]}, {xj[1]})")
             logging.info(f"Revised: {removed_values} removed from ({xi[0]}, {xi[1]})'s domain due to ({xj[0]}, {xj[1]})")
         return revised
 
     while queue:
         xi, xj = queue.pop(0)
-        print(f"Processing cell ({xi}, {xj})")
+        # print(f"Processing cell ({xi}, {xj})")
         logging.info("=====================================================")
         logging.info(f"Processing cell ({xi}, {xj})")
         for i in range(9):
