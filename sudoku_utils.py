@@ -9,24 +9,37 @@ def is_valid_move(board, row, col, num):
     if num in [board[i][col] for i in range(9)]:    # Check same column
         return False
     
-    subgrid_row, subgrid_col = 3 * (row // 3), 3 * (col // 3)   # Check same subgrid
+    subgrid_row, subgrid_col = 3 * (row // 3), 3 * (col // 3)   # Check the 9x9 grid
     for i in range(subgrid_row, subgrid_row + 3):
         for j in range(subgrid_col, subgrid_col + 3):
             if board[i][j] == num:
                 return False
     return True
 
-def is_empty_cell(board):    # finds next empty cell with minimum remaining values MRV
+def is_empty_cell(board, domains):
     min_remaining_values = float('inf')
     selected_cell = None
     for i in range(9):
         for j in range(9):
             if board[i][j] == 0:
-                remaining_values = len(get_domain_values(board, i, j))
+                remaining_values = len(domains[i][j])
                 if remaining_values < min_remaining_values:
                     min_remaining_values = remaining_values
                     selected_cell = (i, j)
     return selected_cell
+
+# def is_empty_cell(board, domains):
+#     min_remaining_values = float('inf')
+#     selected_cell = None
+#     for i in range(9):
+#         for j in range(9):
+#             if board[i][j] == 0:
+#                 remaining_values = len(domains[i][j])  # Use the passed domain list
+#                 if remaining_values < min_remaining_values:
+#                     min_remaining_values = remaining_values
+#                     selected_cell = (i, j)
+#     return selected_cell
+
 
 def get_domain_values(board, row, col):
     domain_values = [num for num in range(1, 10) if is_valid_move(board, row, col, num)]
@@ -89,5 +102,4 @@ def get_filled_cells_range(difficulty):
         return 17, 26
     else:
         return 0, 81 
-
 
