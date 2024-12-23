@@ -16,17 +16,30 @@ def is_valid_move(board, row, col, num):
                 return False
     return True
 
-def is_empty_cell(board):
+def is_empty_cell(board, domains):
     min_remaining_values = float('inf')
     selected_cell = None
     for i in range(9):
         for j in range(9):
             if board[i][j] == 0:
-                remaining_values = len(get_domain_values(board, i, j))
+                remaining_values = len(domains[i][j])
                 if remaining_values < min_remaining_values:
                     min_remaining_values = remaining_values
                     selected_cell = (i, j)
     return selected_cell
+
+# def is_empty_cell(board, domains):
+#     min_remaining_values = float('inf')
+#     selected_cell = None
+#     for i in range(9):
+#         for j in range(9):
+#             if board[i][j] == 0:
+#                 remaining_values = len(domains[i][j])  # Use the passed domain list
+#                 if remaining_values < min_remaining_values:
+#                     min_remaining_values = remaining_values
+#                     selected_cell = (i, j)
+#     return selected_cell
+
 
 def get_domain_values(board, row, col):
     domain_values = [num for num in range(1, 10) if is_valid_move(board, row, col, num)]
