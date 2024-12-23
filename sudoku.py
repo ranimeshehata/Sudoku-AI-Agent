@@ -104,7 +104,7 @@ def apply_arc_consistency(board):
         revised = False
         removed_values = []
         for value in domains[xi[0]][xi[1]]:
-            if isinstance(domains[xj[0]][xj[1]], list) and len(domains[xj[0]][xj[1]]) == 1 and value in domains[xj[0]][xj[1]] :
+            if isinstance(domains[xj[0]][xj[1]], list) and value in domains[xj[0]][xj[1]]:
                 domains[xi[0]][xi[1]].remove(value)
                 removed_values.append(value)
                 revised = True
