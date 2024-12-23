@@ -19,7 +19,7 @@ BUTTON_GAP = 100
 WHITE = (255, 255, 255) 
 MENU_BUTTON_BACKGROUND = (173, 216, 230)
 BLACK = (0, 0, 0)
-GREY = (128, 128, 128)
+GREY = (191, 189, 191)
 ERROR = (230, 30, 30)
 SELECTED_CELL_COLOR = (255, 255, 0) 
 BACKGROUND = (89, 72, 81)
@@ -114,6 +114,7 @@ def draw_sudoku_board(window, board):
             pygame.draw.rect(window, (0, 0, 0), (cell_x, cell_y, cell_size, cell_size), 1)
             
             if board[i][j] != 0:
+                pygame.draw.rect(window, GREY, (cell_x, cell_y, cell_size, cell_size), border_radius=3)
                 text_surface = number_font.render(str(board[i][j]), True, BUTTON_TEXT)
                 text_rect = text_surface.get_rect(center=(cell_x + cell_size / 2, cell_y + cell_size / 2))
                 window.blit(text_surface, text_rect)
@@ -459,7 +460,8 @@ def mode3():
                     cell_x = (event.pos[0] - 10) // 80  
                     cell_y = (event.pos[1] - 10) // 80 
                     if 0 <= cell_x < 9 and 0 <= cell_y < 9:
-                        selected_cell = (cell_x, cell_y)
+                        if user_input_grid[cell_y][cell_x] == 0:
+                            selected_cell = (cell_x, cell_y)
                         # print(f"Selected cell: {selected_cell}")
                         error_message = None
             elif event.type == pygame.KEYDOWN:
@@ -536,6 +538,7 @@ def mode3():
             pygame.draw.rect(mode3_agent, ERROR, box_rect, 2)
             
             mode3_agent.blit(error_text, error_rect)
+            
         # Compare user input with solver's solution in real-time
         if solved_puzzle is not None:
             highlight_conflicts(mode3_agent, user_input_grid, solved_puzzle)
