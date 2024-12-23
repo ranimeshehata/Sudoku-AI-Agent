@@ -94,7 +94,7 @@ def apply_arc_consistency(board, parent_domains=None):
         if revised:
             steps.append(((xi[0], xi[1]), (xj[0], xj[1]), removed_values))
             # print(f"Revised: {removed_values} removed from ({xi[0]}, {xi[1]})'s domain due to ({xj[0]}, {xj[1]})")
-            logging.info(f"Revised: {removed_values} removed from ({xi[0]}, {xi[1]})'s domain due to ({xj[0]}, {xj[1]})")
+            logging.info(f"Revised: The values, {removed_values}, are removed from ({xi[0]}, {xi[1]})'s domain the value due to ({xj[0]}, {xj[1]})")
         return revised
 
     while queue:
