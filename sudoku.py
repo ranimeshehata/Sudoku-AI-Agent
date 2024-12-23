@@ -5,37 +5,93 @@ from sudoku_utils import get_filled_cells_range, is_valid_move, is_empty_cell
 
 logging.basicConfig(filename='sudoku_agent.log', level=logging.INFO, format='%(message)s', filemode='w')
 
-def backtracking(board):
-    mrv_cell = is_empty_cell(board)  # Find mrv cell with min remaining values in domain.
-    print(f"MRV is {mrv_cell}")
-    if mrv_cell is None:   # If no mrv cell is found, the board is solved.
+# def backtracking(board):
+#     mrv_cell = is_empty_cell(board)  # Find mrv cell with min remaining values in domain.
+    
+#     if mrv_cell is None:   # If no mrv cell is found, the board is solved.
+#         return True
+
+#     print(f"MRV is {mrv_cell}")
+#     row, col = mrv_cell
+#     domain_values = get_domain_values(board, row, col)
+
+#     # we re-order by least constrained value of domain of mrv
+#     domain_values.sort(key=lambda num: count_constrained_values(board, row, col, num))
+
+#     print(f"Attempting to fill cell ({row}, {col}) with domain values: {domain_values}")
+#     logging.info(f"Attempting to fill cell ({row}, {col}) with domain values: {domain_values}")
+
+
+#     for num in domain_values:
+#         print(f"Trying value {num} for cell ({row}, {col})")
+#         logging.info(f"Trying value {num} for cell ({row}, {col})")
+#         if is_valid_move(board, row, col, num):
+#             board[row][col] = num
+#             print("Applying Arc Consistency")
+#             logging.info("Applying Arc Consistency")
+
+#             # first returned value is domains, it's None if a var domain became empty
+#             if apply_arc_consistency(board) is not None:
+#                 print("Arc Consistency check is successful")
+#                 logging.info("Arc Consistency check is successful")
+
+#                 # Recursive call to fill the next cell --> DFS way
+#                 if backtracking(board):
+#                     return True
+
+#             print(f"Value {num} for cell ({row}, {col}) leads to conflict. Backtracking...")
+#             logging.info(f"Value {num} for cell ({row}, {col}) leads to conflict. Backtracking...")
+#             board[row][col] = 0
+#         else:
+#             print(f"Value {num} is not valid for cell ({row}, {col}). Skipping...")
+#             logging.info(f"Value {num} is not valid for cell ({row}, {col}). Skipping...") 
+
+#     print(f"No valid value found for cell ({row}, {col}). Backtracking...")
+#     logging.info(f"No valid value found for cell ({row}, {col}). Backtracking...")
+#     return False
+
+def backtracking(board, domains=None):
+    if domains is None:
+        domains = [[list(range(1, 10)) for _ in range(9)] for _ in range(9)]  # Initialize domains for each cell
+    
+    mrv_cell = is_empty_cell(board)  # Find MRV cell with min remaining values in domain.
+    
+    if mrv_cell is None:   # If no MRV cell is found, the board is solved.
         return True
 
+    print(f"MRV is {mrv_cell}")
     row, col = mrv_cell
-    domain_values = get_domain_values(board, row, col)
-
-    # we re-order by least constrained value of domain of mrv
+    
+    # Use existing domain values or get them if not available
+    if not domains[row][col]:  # If no domain values left for the current cell
+        return False
+    
+    domain_values = domains[row][col]
+    
+    # Re-order by least constrained value of domain of MRV
     domain_values.sort(key=lambda num: count_constrained_values(board, row, col, num))
 
     print(f"Attempting to fill cell ({row}, {col}) with domain values: {domain_values}")
     logging.info(f"Attempting to fill cell ({row}, {col}) with domain values: {domain_values}")
 
-
     for num in domain_values:
         print(f"Trying value {num} for cell ({row}, {col})")
         logging.info(f"Trying value {num} for cell ({row}, {col})")
+        
         if is_valid_move(board, row, col, num):
             board[row][col] = num
             print("Applying Arc Consistency")
             logging.info("Applying Arc Consistency")
 
-            # first returned value is domains, it's None if a var domain became empty
-            if apply_arc_consistency(board) is not None:
+            # Apply arc consistency, reusing domains
+            new_domains, steps = apply_arc_consistency(board)
+
+            if new_domains is not None:
                 print("Arc Consistency check is successful")
                 logging.info("Arc Consistency check is successful")
-
-                # Recursive call to fill the next cell --> DFS way
-                if backtracking(board):
+                
+                # Pass the updated domains to the recursive call
+                if backtracking(board, new_domains):
                     return True
 
             print(f"Value {num} for cell ({row}, {col}) leads to conflict. Backtracking...")
@@ -48,6 +104,7 @@ def backtracking(board):
     print(f"No valid value found for cell ({row}, {col}). Backtracking...")
     logging.info(f"No valid value found for cell ({row}, {col}). Backtracking...")
     return False
+
 
 
 def get_domain_values(board, row, col):
@@ -142,24 +199,46 @@ def apply_arc_consistency(board):
     return domains, steps
 
 
+# def solve_sudoku(initial_board):
+#     board = copy.deepcopy(initial_board)
+
+#     if not backtracking(board):
+#         print("The puzzle is unsolvable.")
+#         logging.info("The puzzle is unsolvable.")
+#         return None
+
+#     domains, steps = apply_arc_consistency(board)
+#     if domains is None:
+#         print("Arc consistency failed. The puzzle might be unsolvable.")
+#         logging.info("Arc consistency failed. The puzzle might be unsolvable.")
+#         return None
+
+#     # Create a new board with resolved values, and we directly inject values with domain size 1, otherwise we keep it empty (0)
+#     solved_board = [[domains[i][j][0] if isinstance(domains[i][j], list) and len(domains[i][j]) == 1 else 0 for j in range(9)] for i in range(9)]
+
+#     return solved_board
+
 def solve_sudoku(initial_board):
     board = copy.deepcopy(initial_board)
 
-    if not backtracking(board):
-        print("The puzzle is unsolvable.")
-        logging.info("The puzzle is unsolvable.")
-        return None
-
+    # Apply arc consistency first
     domains, steps = apply_arc_consistency(board)
     if domains is None:
         print("Arc consistency failed. The puzzle might be unsolvable.")
         logging.info("Arc consistency failed. The puzzle might be unsolvable.")
         return None
 
+    # Now perform backtracking with the updated domains
+    if not backtracking(board, domains):
+        print("The puzzle is unsolvable.")
+        logging.info("The puzzle is unsolvable.")
+        return None
+
     # Create a new board with resolved values, and we directly inject values with domain size 1, otherwise we keep it empty (0)
     solved_board = [[domains[i][j][0] if isinstance(domains[i][j], list) and len(domains[i][j]) == 1 else 0 for j in range(9)] for i in range(9)]
 
     return solved_board
+
 
 def generate_random_puzzle(difficulty):
     def remove_cells(board, num_to_remove):
