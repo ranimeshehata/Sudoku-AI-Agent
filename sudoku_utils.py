@@ -9,7 +9,7 @@ def is_valid_move(board, row, col, num):
     if num in [board[i][col] for i in range(9)]:    # Check same column
         return False
     
-    subgrid_row, subgrid_col = 3 * (row // 3), 3 * (col // 3)   # Check same subgrid
+    subgrid_row, subgrid_col = 3 * (row // 3), 3 * (col // 3)   # Check the 9x9 grid
     for i in range(subgrid_row, subgrid_row + 3):
         for j in range(subgrid_col, subgrid_col + 3):
             if board[i][j] == num:
