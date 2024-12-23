@@ -137,6 +137,7 @@ def mode1():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # Check if solve button is clicked
                 if 850 <= event.pos[0] <= 1090 and 500 <= event.pos[1] <= 550:
+                    elapsed_time = None
                     start = time.time()
                     solved_puzzle = solve_sudoku(puzzle)
                     end = time.time()
@@ -153,6 +154,7 @@ def mode1():
 
                 # Check if regenerate button is clicked
                 elif 850 <= event.pos[0] <= 1090 and 575 <= event.pos[1] <= 625:
+                    elapsed_time = None
                     puzzle = generate_random_puzzle(difficulty_texts[selected_difficulty])
                     error_message = None 
                 # Check if back button is clicked
