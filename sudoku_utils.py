@@ -16,7 +16,7 @@ def is_valid_move(board, row, col, num):
                 return False
     return True
 
-def is_empty_cell(board):
+def is_empty_cell(board):    # finds next empty cell with minimum remaining values MRV
     min_remaining_values = float('inf')
     selected_cell = None
     for i in range(9):
