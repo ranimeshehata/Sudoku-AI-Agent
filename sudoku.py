@@ -17,7 +17,6 @@ def backtracking(board, domains=None):
     print(f"MRV is {mrv_cell}")
     row, col = mrv_cell
 
-    
     domain_values = domains[row][col]
 
     # we re-order by least constrained value of domain of mrv
@@ -25,7 +24,6 @@ def backtracking(board, domains=None):
 
     print(f"Attempting to fill cell ({row}, {col}) with domain values: {domain_values}")
     logging.info(f"Attempting to fill cell ({row}, {col}) with domain values: {domain_values}")
-
 
     for num in domain_values:
         print(f"Trying value {num} for cell ({row}, {col})")
@@ -56,9 +54,6 @@ def backtracking(board, domains=None):
     logging.info(f"No valid value found for cell ({row}, {col}). Backtracking...")
     return False
 
-
-
-
 def get_domain_values(board, row, col):
     domain_values = [num for num in range(1, 10) if is_valid_move(board, row, col, num)]
     return domain_values
@@ -76,7 +71,6 @@ def count_constrained_values(board, row, col, num):
                 count += 1
     return count
  
-
 def apply_arc_consistency(board, parent_domains=None):
     queue = []
     # Initialize domains with all possible values
@@ -133,7 +127,6 @@ def apply_arc_consistency(board, parent_domains=None):
 ## OLD IMPLEMENTATION
 def solve_sudoku(initial_board):
     board = copy.deepcopy(initial_board)
-
     
     if not backtracking(board):
         print("The puzzle is unsolvable.")
@@ -147,10 +140,7 @@ def solve_sudoku(initial_board):
 
     # Create a new board with resolved values, and we directly inject values with domain size 1, otherwise we keep it empty (0)
     solved_board = [[domains[i][j][0] if isinstance(domains[i][j], list) and len(domains[i][j]) == 1 else 0 for j in range(9)] for i in range(9)]
-
     return solved_board
-
-
 
 def generate_random_puzzle(difficulty):
     def remove_cells(board, num_to_remove):
@@ -175,44 +165,3 @@ def generate_random_puzzle(difficulty):
     remove_cells(board, num_to_remove)
 
     return board
-    # Create an empty Sudoku board
-    # board = np.zeros((9, 9), dtype=int)
-    
-    # if difficulty == "Easy":
-    #     # Fill random places of the puzzle
-    #     for _ in range(np.random.randint(36, 46)):
-    #         row, col, num = np.random.randint(9, size=3)
-    #         while not is_valid_move(board, row, col, num + 1):
-    #             row, col, num = np.random.randint(9, size=3)
-    #         board[row][col] = num + 1
-    # elif difficulty == "Medium":
-    #     # Fill random places of the puzzle
-    #     for _ in range(np.random.randint(27, 36)):
-    #         row, col, num = np.random.randint(9, size=3)
-    #         while not is_valid_move(board, row, col, num + 1):
-    #             row, col, num = np.random.randint(9, size=3)
-    #         board[row][col] = num + 1
-    # elif difficulty == "Hard":
-    #     # Fill random places of the puzzle
-    #     for _ in range(np.random.randint(17, 27)):
-    #         row, col, num = np.random.randint(9, size=3)
-    #         while not is_valid_move(board, row, col, num + 1):
-    #             row, col, num = np.random.randint(9, size=3)
-    #         board[row][col] = num + 1
-            
-    # return board
-
-    # # Fill random places of the puzzle
-    # for _ in range(np.random.randint(12, 25)):  # Adjust the range for puzzle difficulty
-    #     row, col, num = np.random.randint(9, size=3)
-    #     while not is_valid_move(board, row, col, num + 1):
-    #         row, col, num = np.random.randint(9, size=3)
-    #     board[row][col] = num + 1
-
-    # return board
-    
-
-
-
-
- 

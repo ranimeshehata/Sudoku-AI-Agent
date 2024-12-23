@@ -28,7 +28,6 @@ def is_empty_cell(board, domains):
                     selected_cell = (i, j)
     return selected_cell
 
-
 def get_domain_values(board, row, col):
     domain_values = [num for num in range(1, 10) if is_valid_move(board, row, col, num)]
     return domain_values
@@ -74,12 +73,6 @@ def is_valid_sudoku(board):
                 return False
 
     return True
-
-# def is_initial_state_valid(board):
-#     if not is_valid_sudoku(board):
-#         print("The initial state of the Sudoku puzzle is not valid.")
-#         return False
-#     return True 
 
 def get_filled_cells_range(difficulty):
     if difficulty == "Easy":
