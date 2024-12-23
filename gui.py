@@ -220,6 +220,7 @@ def mode2():
                     mode2 = False
                 elif 850 <= event.pos[0] <= 1050 and 500 <= event.pos[1] <= 550:
                     # Check if the puzzle is valid
+                    elapsed_time = None
                     min_cells, max_cells = get_filled_cells_range(difficulty_texts[selected_difficulty])
                     filled_cells = count_filled_cells(puzzle)
                     if filled_cells < min_cells or filled_cells > max_cells:
@@ -243,6 +244,7 @@ def mode2():
                         error_message = "Invalid Sudoku Input. Please Check Game Constraints"
                 elif 850 <= event.pos[0] <= 1050 and 575 <= event.pos[1] <= 625:
                     # Reset the puzzle when "Reset Board" button is clicked
+                    elapsed_time = None
                     puzzle = [[0 for _ in range(9)] for _ in range(9)]
                     error_message = None 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -405,6 +407,7 @@ def mode3():
     selected_cell = None
     solved_puzzle = None
     user_input_grid = copy.deepcopy(puzzle)
+    initial_grid = copy.deepcopy(puzzle)
     mode3 = True
     error_message = None
     invalid_key_message = None
@@ -421,6 +424,7 @@ def mode3():
                     mode3 = False
                 elif 850 <= event.pos[0] <= 1050 and 500 <= event.pos[1] <= 550:
                     # Solve the puzzle and store the solution
+                    elapsed_time = None
                     min_cells, max_cells = get_filled_cells_range(difficulty_texts[selected_difficulty])
                     filled_cells = count_filled_cells(user_input_grid)
                     if filled_cells < min_cells or filled_cells > max_cells:
@@ -445,8 +449,10 @@ def mode3():
                         error_message = "Invalid Sudoku Input. Please Check Game Constraints"
                 # Check if regenerate button is clicked
                 elif 850 <= event.pos[0] <= 1090 and 575 <= event.pos[1] <= 625:
+                    elapsed_time = None
                     puzzle = generate_random_puzzle(difficulty_texts[selected_difficulty])
-                    user_input_grid = generate_random_puzzle(difficulty_texts[selected_difficulty])
+                    user_input_grid = copy.deepcopy(puzzle)
+                    initial_grid = copy.deepcopy(puzzle)
                     error_message = None 
                 else:
                     # Get the clicked cell position
@@ -459,14 +465,15 @@ def mode3():
             elif event.type == pygame.KEYDOWN:
                 if selected_cell is not None:
                     invalid_key_message = None
-                # Check if a number key (1-9) is pressed
-                    if pygame.K_1 <= event.key <= pygame.K_9:
-                        user_input_grid[selected_cell[1]][selected_cell[0]] = int(event.unicode)
-                    elif event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE:
-                        user_input_grid[selected_cell[1]][selected_cell[0]] = 0
-                    else:
-                        print(f"Invalid key pressed")
-                        invalid_key_message = "Invalid key pressed. Please press a number key (1-9) or Backspace/Delete to clear the cell."
+                    if initial_grid[selected_cell[1]][selected_cell[0]] == 0:
+                    # Check if a number key (1-9) is pressed
+                        if pygame.K_1 <= event.key <= pygame.K_9:
+                            user_input_grid[selected_cell[1]][selected_cell[0]] = int(event.unicode)
+                        elif event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE:
+                            user_input_grid[selected_cell[1]][selected_cell[0]] = 0
+                        else:
+                            print(f"Invalid key pressed")
+                            invalid_key_message = "Invalid key pressed. Please press a number key (1-9) or Backspace/Delete to clear the cell."
 
         mode3_agent.fill(BACKGROUND)
         draw_sudoku_board(mode3_agent, user_input_grid)
