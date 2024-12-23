@@ -19,8 +19,6 @@ def backtracking(board, domains=None):
 
     
     domain_values = domains[row][col]
-    # else:
-    #     domain_values = get_domain_values(board, row, col)
 
     # we re-order by least constrained value of domain of mrv
     domain_values.sort(key=lambda num: count_constrained_values(board, row, col, num))
@@ -58,60 +56,6 @@ def backtracking(board, domains=None):
     logging.info(f"No valid value found for cell ({row}, {col}). Backtracking...")
     return False
 
-# def backtracking(board, domains):
-#     # if domains is None:
-#     #     domains = [[list(range(1, 10)) for _ in range(9)] for _ in range(9)]  # Initialize domains for each cell
-    
-#     mrv_cell = is_empty_cell(board, domains)  # Find MRV cell with min remaining values in domain.
-    
-#     if mrv_cell is None:   # If no MRV cell is found, the board is solved.
-#         return True
-
-#     print(f"MRV is {mrv_cell}")
-#     row, col = mrv_cell
-    
-#     # Use existing domain values or get them if not available
-#     if not domains[row][col]:  # If no domain values left for the current cell
-#         return False
-    
-#     domain_values = domains[row][col]
-    
-#     # Re-order by least constrained value of domain of MRV
-#     domain_values.sort(key=lambda num: count_constrained_values(board, row, col, num))
-
-#     print(f"Attempting to fill cell ({row}, {col}) with domain values: {domain_values}")
-#     logging.info(f"Attempting to fill cell ({row}, {col}) with domain values: {domain_values}")
-
-#     for num in domain_values:
-#         print(f"Trying value {num} for cell ({row}, {col})")
-#         logging.info(f"Trying value {num} for cell ({row}, {col})")
-        
-#         if is_valid_move(board, row, col, num):
-#             board[row][col] = num
-#             print("Applying Arc Consistency")
-#             logging.info("Applying Arc Consistency")
-
-#             # Apply arc consistency, reusing domains
-#             new_domains, steps = apply_arc_consistency(board, domains)
-
-#             if new_domains is not None:
-#                 print("Arc Consistency check is successful")
-#                 logging.info("Arc Consistency check is successful")
-                
-#                 # Pass the updated domains to the recursive call
-#                 if backtracking(board, new_domains):
-#                     return True
-
-#             print(f"Value {num} for cell ({row}, {col}) leads to conflict. Backtracking...")
-#             logging.info(f"Value {num} for cell ({row}, {col}) leads to conflict. Backtracking...")
-#             board[row][col] = 0
-#         else:
-#             print(f"Value {num} is not valid for cell ({row}, {col}). Skipping...")
-#             logging.info(f"Value {num} is not valid for cell ({row}, {col}). Skipping...") 
-
-#     print(f"No valid value found for cell ({row}, {col}). Backtracking...")
-#     logging.info(f"No valid value found for cell ({row}, {col}). Backtracking...")
-#     return False
 
 
 
@@ -131,27 +75,7 @@ def count_constrained_values(board, row, col, num):
             if (i != row or j != col) and not is_valid_move(board, i, j, num):
                 count += 1
     return count
-
-def forward_checking(board, row, col, num):
-    original_board = copy.deepcopy(board)  # copy board before making changes
-
-    #assignment
-    board[row][col] = num
-
-    # Check consistency with peers
-    for i in range(9):
-        if i != col and board[row][i] == num:  # conflicts in the same row
-            board[row][col] = 0  # Revert the assignment
-            return False
-        if i != row and board[i][col] == num:  # conflicts in the same column
-            board[row][col] = 0  # Revert the assignment
-            return False
-    for i in range(row - row % 3, row - row % 3 + 3):
-        for j in range(col - col % 3, col - col % 3 + 3):
-            if (i != row or j != col) and board[i][j] == num:  # conflicts in the same 3x3 subgrid
-                board[row][col] = 0  # Revert the assignment
-                return False
-    return True  
+ 
 
 def apply_arc_consistency(board, parent_domains=None):
     queue = []
