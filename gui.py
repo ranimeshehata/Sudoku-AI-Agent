@@ -100,8 +100,7 @@ def draw_menu():
                 pygame.draw.rect(window, (255, 255, 255), box_rect)
                 pygame.draw.rect(window, ERROR, box_rect, 2)
                 window.blit(message_text, message_rect)
-                
-                
+                                
 def count_filled_cells(grid):
     return sum(cell != 0 for row in grid for cell in row)
 
@@ -198,7 +197,6 @@ def mode1():
 
         pygame.display.flip()
         
-
 def mode2():
     mode2_agent = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Mode 2: AI Agent Solve User Generate Board")
@@ -240,7 +238,6 @@ def mode2():
                         else:
                             error_message = "The puzzle is unsolvable."
                             logging.info("The puzzle is unsolvable.")
-
                     else:
                         error_message = "Invalid Sudoku Input. Please Check Game Constraints"
                 elif 850 <= event.pos[0] <= 1050 and 575 <= event.pos[1] <= 625:
@@ -283,7 +280,6 @@ def mode2():
         hint_text = hint_font.render(f"Enter between {min_cells} and {max_cells} cells", True, BLACK)
         mode2_agent.blit(hint_text, (850, 100))
 
-
         if selected_cell is not None:
             cell_x, cell_y = selected_cell
             pygame.draw.rect(mode2_agent, SELECTED_CELL_COLOR, (cell_x * 80 + 12, cell_y * 80 + 12, 73, 73), 5, border_radius=10)
@@ -316,8 +312,7 @@ def mode2():
                 error_rect.height + 2 * box_padding
             )
             pygame.draw.rect(mode2_agent, (255, 255, 255), box_rect)
-            pygame.draw.rect(mode2_agent, ERROR, box_rect, 2)
-            
+            pygame.draw.rect(mode2_agent, ERROR, box_rect, 2)    
             mode2_agent.blit(error_text, error_rect)
             
         if elapsed_time is not None:
@@ -338,7 +333,6 @@ def mode2():
         mode2_agent.blit(back_text, (880, 660))
 
         pygame.display.flip()
-
     return puzzle
 
 def highlight_conflicts(mode3_agent, user_input_grid, solved_puzzle):
@@ -502,7 +496,6 @@ def mode3():
         Instructions_text = Instructions_font.render("Click on (Start Solve Board) to start playing ..", True, BLACK)
         mode3_agent.blit(Instructions_text, (800, 150))
         
-
         if selected_cell is not None:
             cell_x, cell_y = selected_cell
             pygame.draw.rect(mode3_agent, SELECTED_CELL_COLOR, (cell_x * 80 + 12, cell_y * 80 + 12, 72, 72), 5, border_radius=10)
@@ -543,16 +536,6 @@ def mode3():
         if solved_puzzle is not None:
             highlight_conflicts(mode3_agent, user_input_grid, solved_puzzle)
 
-            # for y in range(9):
-            #     for x in range(9):
-            #         if user_input_grid[y][x] != 0 and user_input_grid[y][x] != solved_puzzle[y][x]:
-            #             # incorrect user input
-            #             pygame.draw.rect(mode3_agent, ERROR, (x * 80 + 12, y * 80 + 12, 72, 72), 5, border_radius=10)
-            #             print(f"User input at ({x}, {y}) is incorrect")
-            #             logging.info(f"User input at ({x}, {y}) is incorrect")
-            #             invalid_key_message = (f"Input at Column ({x+1}), Row ({y+1}) is incorrect")
-
-
         pygame.draw.rect(mode3_agent, BUTTON_BACKGROUND, (850, 500, 200, 50), border_radius=20)
         pygame.draw.rect(mode3_agent, BUTTON_BACKGROUND, (850, 575, 200, 50), border_radius=20)
         pygame.draw.rect(mode3_agent, BUTTON_BACKGROUND, (850, 650, 200, 50), border_radius=20)  
@@ -565,11 +548,9 @@ def mode3():
         mode3_agent.blit(back_text, (880, 660))
 
         pygame.display.flip()
-
     return user_input_grid
 
 def main():
-    # Main loop
     mode1_option = False  
     mode2_option = False  
     mode3_option = False  
