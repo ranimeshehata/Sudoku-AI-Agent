@@ -12,6 +12,51 @@ This project is a Sudoku solver and generator with a graphical user interface (G
 - **Sudoku Generator**: Generates Sudoku puzzles of varying difficulty levels (Easy, Moderate, Hard).
 - **Graphical User Interface**: Built with Pygame, allowing users to interact with the Sudoku Board visually.
 
+## Randomization:
+
+This function generates a randomized Sudoku puzzle based on the specified difficulty level. The randomization involves the following steps:
+
+#### 1. Determine the Range of Pre-Filled Cells
+
+The function get_filled_cells_range(difficulty) returns a tuple (min_filled, max_filled) based on the difficulty level:
+Easy: Between 36–45 pre-filled cells.
+Moderate: Between 27–35 pre-filled cells.
+Hard: Between 17–26 pre-filled cells.
+ ```sh
+np.random.randint(*filled_range) 
+```
+selects a random number of cells to fill within the specified range.
+
+#### 2. Generate a Fully Solved Sudoku Board
+
+- A 9x9 empty board (all zeros) is initialized. <br>
+- The backtracking algorithm fills the board with valid values to create a complete (solved) Sudoku board. The randomization here comes from the backtracking logic itself: <br>
+- MRV (Minimum Remaining Values): The cell with the fewest valid options is chosen. <br>
+- LCV (Least Constraining Value): The algorithm tries numbers in the order that creates the least constraints for other cells. <br>
+- Recursive backtracking ensures the board remains valid as it is filled.
+
+#### 3. Remove Cells to Match the Difficulty
+
+- The number of cells to remove (num_to_remove) is calculated as the total cells (81) minus the number of pre-filled cells (num_filled).
+#### The remove_cells function uses randomization:
+
+- Randomly selects a row and column using np.random.randint(0, 9, size=2). <br>
+- If the selected cell is already empty (board[row][col] == 0), it skips removing it and continues until the desired number of cells is removed. <br>
+- This random removal ensures that each generated puzzle is unique while adhering to the desired difficulty level.
+#### Supporting Randomization in the Backtracking:
+- MRV and LCV Logic: <br>
+For each unfilled cell, the backtracking algorithm sorts possible values by the "least constraining value." This ensures that even if multiple puzzles are generated with the same difficulty, the paths taken during backtracking differ due to varying constraints.<br>
+- Recursive Nature: <br>
+The depth-first search (DFS) approach of backtracking inherently introduces variability in the order of exploration.
+
+
+#### Randomization Key Points:
+- Randomized Pre-Fill Count: The number of cells to pre-fill varies based on difficulty. <br>
+- Randomized Cell Selection for Removal: Cells to be emptied are randomly selected. <br>
+- Randomized Backtracking Path: The LCV and MRV heuristics ensure unique solutions even for identical inputs. <br>
+- This combination of strategies ensures the generated puzzles are unique and adhere to the desired difficulty level.
+
+
 ## Project Structure
 
 - `gui.py`: Contains the Pygame GUI implementation and the main game loop.
