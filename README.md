@@ -1,6 +1,16 @@
 # Sudoko AI Agent
 
 This project is a Sudoku solver and generator with a graphical user interface (GUI) built using Pygame. It provides three modes for users to interact with Sudoku puzzles:
+![image](https://github.com/user-attachments/assets/dd8eb676-c2a5-43cd-ab23-69f5285fd7e9)
+
+![image](https://github.com/user-attachments/assets/c9822c3e-2b0d-46ac-8f69-fd179d31b63b)
+
+![image](https://github.com/user-attachments/assets/602f3c64-b56d-4030-ba6e-f8df35305427)
+
+![image](https://github.com/user-attachments/assets/fa66fd3b-af3f-4b69-ba1f-fcd2a0ebf455)
+
+![image](https://github.com/user-attachments/assets/bafab339-4dbc-4542-98b8-3d76effc36e8)
+
 
 1. **Mode 1**: AI Agent solves a randomly generated Sudoku board.
 2. **Mode 2**: AI Agent solves a user-generated Sudoku board.
